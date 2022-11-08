@@ -1,0 +1,24 @@
+---
+- hosts: group1
+  tasks:
+    - name: Install Apache
+      yum:
+        name: httpd
+        state: latest
+    - name: "{{item}}"
+      service:
+        enable: true
+        state: started
+      with_items:
+        - httpd
+        - smb
+    - name: open firewall
+      firewalld:
+        service: http
+        permanet: true
+        immediate: true
+        state: enabled
+    - name: copy
+      copy:
+        content: "Welcome to the jungle"
+        dest: /var/www/html/index.html
